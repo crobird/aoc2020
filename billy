@@ -9,6 +9,23 @@ def daydir(day):
 
 def main(args):
     if args.day:
+
+        # -- Copy part1 over to part2
+        if args.copy_part:
+            day_dir = daydir(args.day)
+            part1 = os.path.join(day_dir, "part1.py")
+            part2 = os.path.join(day_dir, "part2.py")
+            if not os.path.isdir(day_dir):
+                print(f"Day directory '{day_dir}' doesn't exist yet, so no part to copy")
+                exit(1)
+            elif os.path.isfile(part2):
+                print(f"Part file '{part2}' already exists, not copying over it for fear of losing something.")
+                exit(1)
+            os.system(f"cp {part1} {part2}")
+            os.system(f"chmod a+x {part2}")
+            print(f"Copied {part1} to {part2}")
+            exit(0)
+
         new_daydir = daydir(args.day)
         if os.path.isdir(new_daydir):
             print(f"Directory {new_daydir} already exists. Bailing.")
@@ -52,6 +69,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--day', help='Day number', type=int, required=True)
     parser.add_argument('-C', '--clone_day', help="Clone day as new day (use 0 for previous day)", type=int)
+    parser.add_argument('-X', '--copy_part', help="Copy part1.py to part2.py for the given day", default=False, action="store_true")
     args = parser.parse_args()
 
     main(args)
